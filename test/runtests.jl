@@ -72,6 +72,10 @@ using Test
     @test_throws TypeError RowMajorArray(a) == RowMajorArray{Int64, 3, Array{Int64, 2}}(a)
     @test_throws TypeError RowMajorArray(a) == RowMajorArray{Int64, 2, Array{Float64, 2}}(a)
 
-
+    # broadcasting
+    @test typeof(one_r .* a_r) == RowMajorArray{Float64,2,Array{Float64,2}}
+    @test typeof(one_r .+ a_r) == RowMajorArray{Float64,2,Array{Float64,2}}
+    @test_broken typeof(a_r .* one_r) == RowMajorArray{Float64,2,Array{Float64,2}}
+    @test_broken typeof(a_r .+ one_r) == RowMajorArray{Float64,2,Array{Float64,2}}
 
 end

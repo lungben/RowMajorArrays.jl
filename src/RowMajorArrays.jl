@@ -9,7 +9,6 @@ struct RowMajorArray{T, N, A <: AbstractArray{T, N}} <: AbstractArray{T, N}
 end
 
 RowMajorArray{T, N}(a:: AbstractArray{T, N}) where {T, N} = RowMajorArray{T, N, typeof(a)}(a)
-RowMajorArray(a:: AbstractArray{T, N}) where {T, N} = RowMajorArray{T, N, typeof(a)}(a)
 
 RowMajorArray{T, N, A}(::UndefInitializer, I::Vararg{<: Int, N}) where {T, N, A <: AbstractArray} = RowMajorArray(A(undef, reverse(I)...))
 
@@ -23,6 +22,32 @@ Base.setindex!(a:: RowMajorArray, v, I::Vararg{<: Int, N}) where {N} = setindex!
 
 Base.size(a:: RowMajorArray) = reverse(size(a.data))
 Base.size(a:: RowMajorArray, dim:: Int) = reverse(size(a.data))[dim]
+
+Base.similar(a:: RowMajorArray{T, N, A}) where {T, N, A} = similar(a, T, size(a))
+Base.similar(a:: RowMajorArray{T, N, A}, dims:: Dims) where {T, N, A} =  RowMajorArray{T, N, A}(A(undef, reverse(dims)...))
+Base.similar(a:: RowMajorArray{T, N, A}, ::Type{T}, dims:: Dims) where {T, N, A} = RowMajorArray{T, N, A}(A(undef, reverse(dims)...))
+
+
+# defining broadcasting
+Base.BroadcastStyle(::Type{<: RowMajorArray}) = Broadcast.ArrayStyle{RowMajorArray}()
+
+# see https://docs.julialang.org/en/v1/manual/interfaces/#Selecting-an-appropriate-output-array
+function Base.similar(bc:: Broadcast.Broadcasted{Broadcast.ArrayStyle{RowMajorArray}}, ::Type{ElType}) where ElType
+    # Scan the inputs for the ArrayAndChar:
+    A = find_row_major_array(bc)
+    # Use the char field of A to create the output
+    similar(A, ElType, size(A))
+end
+
+"`A = find_row_major_array(As)` returns the first RowMajorArray among the arguments."
+find_row_major_array(bc::Base.Broadcast.Broadcasted) = find_row_major_array(bc.args)
+find_row_major_array(args::Tuple) = find_row_major_array(find_row_major_array(args[1]), Base.tail(args))
+find_row_major_array(a::RowMajorArray) = a
+find_row_major_array(::Any) = nothing
+find_row_major_array(::Tuple{}) = nothing
+find_row_major_array(a::RowMajorArray, rest) = a
+find_row_major_array(::Any, rest) = find_row_major_array(rest)
+
 
 Base.:(==)(a1:: RowMajorArray, a2:: RowMajorArray) = a1.data == a2.data
 
