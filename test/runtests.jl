@@ -78,4 +78,8 @@ using Test
     @test_broken typeof(a_r .* one_r) == RowMajorArray{Float64,2,Array{Float64,2}}
     @test_broken typeof(a_r .+ one_r) == RowMajorArray{Float64,2,Array{Float64,2}}
 
+    # check that standard array broadcasting is not broken
+    @test typeof(a .+ ones(2, 3)) == Array{Float64,2}
+    @test typeof(ones(2, 3) .+ a) == Array{Float64,2}
+    
 end

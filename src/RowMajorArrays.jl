@@ -25,7 +25,7 @@ Base.size(a:: RowMajorArray, dim:: Int) = reverse(size(a.data))[dim]
 
 Base.similar(a:: RowMajorArray{T, N, A}) where {T, N, A} = similar(a, T, size(a))
 Base.similar(a:: RowMajorArray{T, N, A}, dims:: Dims) where {T, N, A} =  RowMajorArray{T, N, A}(A(undef, reverse(dims)...))
-Base.similar(a:: RowMajorArray{T, N, A}, ::Type{T}, dims:: Dims) where {T, N, A} = RowMajorArray{T, N, A}(A(undef, reverse(dims)...))
+Base.similar(a:: RowMajorArray{T, N, A}, ::Type{T}, dims:: Dims) where {T, N, A} = RowMajorArray{T, N, A}(A(undef, reverse(dims)...)) # ToDo: this function needs to create a `RowMajorArray` with given element type
 
 
 # defining broadcasting
