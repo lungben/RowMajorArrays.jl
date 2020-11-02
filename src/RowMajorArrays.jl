@@ -4,7 +4,7 @@ export RowMajorArray
 
 using LinearAlgebra
 
-struct RowMajorArray{T, N, A <: AbstractArray} <: AbstractArray{T, N}
+struct RowMajorArray{T, N, A <: AbstractArray{T, N}} <: AbstractArray{T, N}
     data:: A
 end
 

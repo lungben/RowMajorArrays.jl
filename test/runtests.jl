@@ -66,4 +66,12 @@ using Test
     b_r = RowMajorArray([1 2; 3 4; 4 6])
     @test (a_r * b_r).data == transpose(a_r.data) * transpose(b_r.data)
 
+    # inconsistent array types
+    a = [1 2 3; 4 5 6]
+    @test RowMajorArray(a) == RowMajorArray{Int64, 2, Array{Int64, 2}}(a) # consistent types
+    @test_throws TypeError RowMajorArray(a) == RowMajorArray{Int64, 3, Array{Int64, 2}}(a)
+    @test_throws TypeError RowMajorArray(a) == RowMajorArray{Int64, 2, Array{Float64, 2}}(a)
+
+
+
 end
