@@ -23,12 +23,12 @@ using Test
     @test size(z2) == (5, 3)
     @test zeros(3, 5) == z.data
     @test eltype(z2) == Float64
-    # @test z .== 0
+    @test all(z2 .== 0)
 
     o = RowMajorArrays.ones(Int, 5, 3)
     @test size(o) == (5, 3)
     @test ones(Int, 3, 5) == o.data
-    # @test o .== 0
+    @test all(o .== 1)
 
     r1 = RowMajorArrays.rand(7, 2)
     @test size(r1.data) == (2, 7)
@@ -52,16 +52,16 @@ using Test
     @test size(a42b) == (5, 3)
     @test a42 == a42b
 
-    undef_array = RowMajorArray{Array{Float64, 2}}(undef, 3, 2)
-    @test size(undef_array) == (3, 2)
-    undef_array2 = RowMajorArray{Array{Float64, 3}}(undef, 5, 4, 3)
-    @test size(undef_array2) == (5, 4, 3)
-    @test size(undef_array2.data) == (3, 4, 5)
+    # undef_array = RowMajorArray{Array{Float64, 2}, Float64, 2}(undef, 3, 2)
+    # @test size(undef_array) == (3, 2)
+    # undef_array2 = RowMajorArray{Array{Float64, 3}, Float64, 2}(undef, 5, 4, 3)
+    # @test size(undef_array2) == (5, 4, 3)
+    # @test size(undef_array2.data) == (3, 4, 5)
 
     a_r = RowMajorArray([1 2 3; 4 5 6])
     one_r = RowMajorArrays.ones(3, 2)
-    @test RowMajorArray([1 2 3; 4 5 6]) + one_r == RowMajorArray([2. 3. 4.; 5. 6. 7.])
-    @test RowMajorArray([1 2 3; 4 5 6]) - one_r == RowMajorArray([0. 1. 2.; 3. 4. 5.])
+    @test a_r + one_r == RowMajorArray([2. 3. 4.; 5. 6. 7.])
+    @test a_r - one_r == RowMajorArray([0. 1. 2.; 3. 4. 5.])
 
     b_r = RowMajorArray([1 2; 3 4; 4 6])
     @test (a_r * b_r).data == transpose(a_r.data) * transpose(b_r.data)

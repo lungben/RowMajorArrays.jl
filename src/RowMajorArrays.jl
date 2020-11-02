@@ -4,11 +4,14 @@ export RowMajorArray
 
 using LinearAlgebra
 
-struct RowMajorArray{A <: AbstractArray}
+struct RowMajorArray{T, N, A <: AbstractArray} <: AbstractArray{T, N}
     data:: A
 end
 
-RowMajorArray{T}(::UndefInitializer, I::Vararg{<: Integer, N}) where {T <: AbstractArray, N} = RowMajorArray(T(undef, reverse(I)...))
+RowMajorArray{T, N}(a:: AbstractArray{T, N}) where {T, N} = RowMajorArray{T, N, typeof(a)}(a)
+RowMajorArray(a:: AbstractArray{T, N}) where {T, N} = RowMajorArray{T, N, typeof(a)}(a)
+
+#RowMajorArray{T, N}(::UndefInitializer, I::Vararg{<: Integer, N}) where {A <: AbstractArray, T, N} = RowMajorArray(A(undef, reverse(I)...))
 
 import Base
 
@@ -28,8 +31,8 @@ for m in forward_methods
     @eval Base.$m(a:: RowMajorArray) = Base.$m(a.data)
 end
 
-Base.iterate(a:: RowMajorArray) = Base.iterate(a.data)
-Base.iterate(a:: RowMajorArray, i) = Base.iterate(a.data, i)
+# Base.iterate(a:: RowMajorArray) = Base.iterate(a.data)
+# Base.iterate(a:: RowMajorArray, i) = Base.iterate(a.data, i)
 
 # constructor methods
 # separate from `Base.zeros`, etc. - execute with qualified module name, e.g. `RowMajorArrays.zeros`, etc.
