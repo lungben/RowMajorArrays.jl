@@ -2,6 +2,8 @@ module RowMajorArrays
 
 export RowMajorArray
 
+using LinearAlgebra
+
 struct RowMajorArray{A <: AbstractArray}
     data:: A
 end
@@ -45,5 +47,8 @@ forward_methods = (:(+), :(-))
 for m in forward_methods
     @eval Base.$m(a1:: RowMajorArray, a2:: RowMajorArray) = RowMajorArray(Base.$m(a1.data, a2.data))
 end
+
+# ideally, this should be replaced with calls to OpenBlas Row-Major functions
+Base.:(*)(a1:: RowMajorArray, a2:: RowMajorArray) = RowMajorArray(collect(transpose(a1.data)) * collect(transpose(a2.data)))
 
 end

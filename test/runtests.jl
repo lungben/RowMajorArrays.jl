@@ -58,8 +58,12 @@ using Test
     @test size(undef_array2) == (5, 4, 3)
     @test size(undef_array2.data) == (3, 4, 5)
 
+    a_r = RowMajorArray([1 2 3; 4 5 6])
     one_r = RowMajorArrays.ones(3, 2)
     @test RowMajorArray([1 2 3; 4 5 6]) + one_r == RowMajorArray([2. 3. 4.; 5. 6. 7.])
     @test RowMajorArray([1 2 3; 4 5 6]) - one_r == RowMajorArray([0. 1. 2.; 3. 4. 5.])
+
+    b_r = RowMajorArray([1 2; 3 4; 4 6])
+    @test (a_r * b_r).data == transpose(a_r.data) * transpose(b_r.data)
 
 end
