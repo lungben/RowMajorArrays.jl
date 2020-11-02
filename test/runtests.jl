@@ -17,7 +17,7 @@ using Test
     @test size(z) == (5, 3)
     @test zeros(Int, 3, 5) == z.data
     @test eltype(z) == Int
-    # @test z .== 0
+    @test all(z .== 0)
 
     z2 = RowMajorArrays.zeros(5, 3)
     @test size(z2) == (5, 3)
@@ -57,5 +57,9 @@ using Test
     undef_array2 = RowMajorArray{Array{Float64, 3}}(undef, 5, 4, 3)
     @test size(undef_array2) == (5, 4, 3)
     @test size(undef_array2.data) == (3, 4, 5)
+
+    one_r = RowMajorArrays.ones(3, 2)
+    @test RowMajorArray([1 2 3; 4 5 6]) + one_r == RowMajorArray([2. 3. 4.; 5. 6. 7.])
+    @test RowMajorArray([1 2 3; 4 5 6]) - one_r == RowMajorArray([0. 1. 2.; 3. 4. 5.])
 
 end
