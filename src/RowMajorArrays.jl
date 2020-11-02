@@ -19,6 +19,7 @@ Base.setindex!(a:: RowMajorArray, v, i:: Integer) = setindex!(a.data, v, i)
 Base.setindex!(a:: RowMajorArray, v, I::Vararg{<: Integer, N}) where {N} = setindex!(a.data, v, reverse(I)...)
 
 Base.size(a:: RowMajorArray) = reverse(size(a.data))
+Base.size(a:: RowMajorArray, dim:: Integer) = reverse(size(a.data))[dim]
 
 Base.:(==)(a1:: RowMajorArray, a2:: RowMajorArray) = a1.data == a2.data
 
