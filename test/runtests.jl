@@ -52,11 +52,11 @@ using Test
     @test size(a42b) == (5, 3)
     @test a42 == a42b
 
-    # undef_array = RowMajorArray{Array{Float64, 2}, Float64, 2}(undef, 3, 2)
-    # @test size(undef_array) == (3, 2)
-    # undef_array2 = RowMajorArray{Array{Float64, 3}, Float64, 2}(undef, 5, 4, 3)
-    # @test size(undef_array2) == (5, 4, 3)
-    # @test size(undef_array2.data) == (3, 4, 5)
+    undef_array = RowMajorArray{Float64, 2, Array{Float64, 2}}(undef, 3, 2)
+    @test size(undef_array) == (3, 2)
+    undef_array2 = RowMajorArray{Float64, 3, Array{Float64, 3}}(undef, 5, 4, 3)
+    @test size(undef_array2) == (5, 4, 3)
+    @test size(undef_array2.data) == (3, 4, 5)
 
     a_r = RowMajorArray([1 2 3; 4 5 6])
     one_r = RowMajorArrays.ones(3, 2)

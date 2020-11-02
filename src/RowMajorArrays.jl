@@ -11,18 +11,18 @@ end
 RowMajorArray{T, N}(a:: AbstractArray{T, N}) where {T, N} = RowMajorArray{T, N, typeof(a)}(a)
 RowMajorArray(a:: AbstractArray{T, N}) where {T, N} = RowMajorArray{T, N, typeof(a)}(a)
 
-#RowMajorArray{T, N}(::UndefInitializer, I::Vararg{<: Integer, N}) where {A <: AbstractArray, T, N} = RowMajorArray(A(undef, reverse(I)...))
+RowMajorArray{T, N, A}(::UndefInitializer, I::Vararg{<: Int, N}) where {T, N, A <: AbstractArray} = RowMajorArray(A(undef, reverse(I)...))
 
 import Base
 
-Base.getindex(a:: RowMajorArray, I::Vararg{<: Integer, N}) where {N} = getindex(a.data, reverse(I)...)
-Base.getindex(a:: RowMajorArray, i:: Integer) = getindex(a.data, i) # linear indexing is done row-major here to have optimal memory alignment
+Base.getindex(a:: RowMajorArray, I::Vararg{<: Int, N}) where {N} = getindex(a.data, reverse(I)...)
+Base.getindex(a:: RowMajorArray, i:: Int) = getindex(a.data, i) # linear indexing is done row-major here to have optimal memory alignment
 
-Base.setindex!(a:: RowMajorArray, v, i:: Integer) = setindex!(a.data, v, i)
-Base.setindex!(a:: RowMajorArray, v, I::Vararg{<: Integer, N}) where {N} = setindex!(a.data, v, reverse(I)...)
+Base.setindex!(a:: RowMajorArray, v, i:: Int) = setindex!(a.data, v, i)
+Base.setindex!(a:: RowMajorArray, v, I::Vararg{<: Int, N}) where {N} = setindex!(a.data, v, reverse(I)...)
 
 Base.size(a:: RowMajorArray) = reverse(size(a.data))
-Base.size(a:: RowMajorArray, dim:: Integer) = reverse(size(a.data))[dim]
+Base.size(a:: RowMajorArray, dim:: Int) = reverse(size(a.data))[dim]
 
 Base.:(==)(a1:: RowMajorArray, a2:: RowMajorArray) = a1.data == a2.data
 
@@ -38,11 +38,11 @@ end
 # separate from `Base.zeros`, etc. - execute with qualified module name, e.g. `RowMajorArrays.zeros`, etc.
 forward_methods = (:zeros, :ones, :rand, :randn)
 for m in forward_methods
-    @eval $m(T:: Type, I::Vararg{<: Integer, N}) where {N} = RowMajorArray(Base.$m(T, reverse(I)...))
-    @eval $m(I::Vararg{<: Integer, N}) where {N} = RowMajorArray(Base.$m(reverse(I)...))
+    @eval $m(T:: Type, I::Vararg{<: Int, N}) where {N} = RowMajorArray(Base.$m(T, reverse(I)...))
+    @eval $m(I::Vararg{<: Int, N}) where {N} = RowMajorArray(Base.$m(reverse(I)...))
 end
 
-fill(x, I::Vararg{<: Integer, N}) where {N} = RowMajorArray(Base.fill(x, reverse(I)...))
+fill(x, I::Vararg{<: Int, N}) where {N} = RowMajorArray(Base.fill(x, reverse(I)...))
 fill(x, I::Tuple) = RowMajorArray(Base.fill(x, reverse(I)))
 
 # operations
