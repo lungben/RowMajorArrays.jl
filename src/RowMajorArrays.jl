@@ -6,6 +6,8 @@ struct RowMajorArray{A <: AbstractArray}
     data:: A
 end
 
+RowMajorArray{T}(::UndefInitializer, I::Vararg{<: Integer, N}) where {T <: AbstractArray, N} = RowMajorArray(T(undef, reverse(I)...))
+
 import Base
 
 Base.getindex(a:: RowMajorArray, I::Vararg{<: Integer, N}) where {N} = getindex(a.data, reverse(I)...)
@@ -16,16 +18,22 @@ Base.setindex!(a:: RowMajorArray, v, I::Vararg{<: Integer, N}) where {N} = setin
 
 Base.size(a:: RowMajorArray) = reverse(size(a.data))
 
+Base.:(==)(a1:: RowMajorArray, a2:: RowMajorArray) = a1.data == a2.data
+
 forward_methods = (:length, :eltype)
 for m in forward_methods
     @eval Base.$m(a:: RowMajorArray) = Base.$m(a.data)
 end
 
+# constructor methods
 # separate from `Base.zeros`, etc. - execute with qualified module name, e.g. `RowMajorArrays.zeros`, etc.
 forward_methods = (:zeros, :ones, :rand, :randn)
 for m in forward_methods
     @eval $m(T:: Type, I::Vararg{<: Integer, N}) where {N} = RowMajorArray(Base.$m(T, reverse(I)...))
     @eval $m(I::Vararg{<: Integer, N}) where {N} = RowMajorArray(Base.$m(reverse(I)...))
 end
+
+fill(x, I::Vararg{<: Integer, N}) where {N} = RowMajorArray(Base.fill(x, reverse(I)...))
+fill(x, I::Tuple) = RowMajorArray(Base.fill(x, reverse(I)))
 
 end

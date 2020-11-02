@@ -44,8 +44,18 @@ using Test
     @test size(r2b.data) == (2, 7)
     @test eltype(r2b) == Float32
 
-
+    a42 = RowMajorArrays.fill(42, 5, 3)
+    @test size(a42) == (5, 3)
+    @test a42[2, 1] == 42
     
+    a42b = RowMajorArrays.fill(42, (5, 3))
+    @test size(a42b) == (5, 3)
+    @test a42 == a42b
 
+    undef_array = RowMajorArray{Array{Float64, 2}}(undef, 3, 2)
+    @test size(undef_array) == (3, 2)
+    undef_array2 = RowMajorArray{Array{Float64, 3}}(undef, 5, 4, 3)
+    @test size(undef_array2) == (5, 4, 3)
+    @test size(undef_array2.data) == (3, 4, 5)
 
 end
