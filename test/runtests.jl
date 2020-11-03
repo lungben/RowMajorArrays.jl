@@ -81,5 +81,11 @@ using Test
     # check that standard array broadcasting is not broken
     @test typeof(a .+ ones(2, 3)) == Array{Float64,2}
     @test typeof(ones(2, 3) .+ a) == Array{Float64,2}
+
+    # test pretty printing - 2d RowMajorArrays are printed with reversed dimensions of the underlying array
+    io = IOBuffer(append=true)
+    print(io, a_r)
+    @test read(io, String) == "[1 4; 2 5; 3 6]"
+
     
 end

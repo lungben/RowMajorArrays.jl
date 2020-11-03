@@ -51,6 +51,9 @@ find_row_major_array(::Any, rest) = find_row_major_array(rest)
 
 Base.:(==)(a1:: RowMajorArray, a2:: RowMajorArray) = a1.data == a2.data
 
+# for display for 2d RowMajorArrays, transpose data for printing so that the dimensions are printed in the right order
+Base.show_nd(io::IO, a::RowMajorArray{T, 2, A}, print_matrix::Function, label_slices::Bool) where {T, A} = Base.show_nd(io, collect(transpose(a)), print_matrix, label_slices)
+
 forward_methods = (:length, :eltype)
 for m in forward_methods
     @eval Base.$m(a:: RowMajorArray) = Base.$m(a.data)
