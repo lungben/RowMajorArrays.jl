@@ -109,7 +109,9 @@ for m in forward_methods
     @eval Base.$m(a1:: RowMajorArray, a2:: RowMajorArray) = RowMajorArray(Base.$m(a1.data, a2.data))
 end
 
-# ideally, this should be replaced with calls to OpenBlas Row-Major functions
+# Matrix multiplication - very crude implementation by converting to standard arrays.
+# This should not be too slow for large matrices because converting is O(n²) whereas matrix multiplication is O(n³).
+# Tdeally, this should be replaced with calls to OpenBlas Row-Major functions
 Base.:(*)(a1:: RowMajorArray, a2:: RowMajorArray) = RowMajorArray(collect(transpose(a1.data)) * collect(transpose(a2.data)))
 
 end
