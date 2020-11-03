@@ -72,6 +72,20 @@ using Test
     @test_throws TypeError RowMajorArray(a) == RowMajorArray{Int64, 3, Array{Int64, 2}}(a)
     @test_throws TypeError RowMajorArray(a) == RowMajorArray{Int64, 2, Array{Float64, 2}}(a)
 
+    # similar
+    similar_1 = similar(a_r)
+    @test size(similar_1) == (3,2)
+    @test typeof(similar_1) == typeof(a_r) == RowMajorArray{Int64,2,Array{Int64,2}}
+    similar_2 = similar(a_r, (10,4))
+    @test size(similar_2) == (10,4)
+    @test typeof(similar_2) == typeof(a_r) == RowMajorArray{Int64,2,Array{Int64,2}}
+    similar_3 = similar(a_r, Int64, (10,4)) # same eltype as original array
+    @test size(similar_3) == (10,4)
+    @test typeof(similar_3) == typeof(a_r) == RowMajorArray{Int64,2,Array{Int64,2}}
+    similar_4 = similar(a_r, Float64, (10,4)) # other eltype than original array
+    @test size(similar_4) == (10,4)
+    @test_broken typeof(similar_4) == RowMajorArray{Float64,2,Array{Float64,2}}
+
     # broadcasting
     @test typeof(one_r .* a_r) == RowMajorArray{Float64,2,Array{Float64,2}}
     @test typeof(one_r .+ a_r) == RowMajorArray{Float64,2,Array{Float64,2}}
