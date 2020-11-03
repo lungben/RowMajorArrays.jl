@@ -7,6 +7,7 @@ using Test
 
     @test a[1, 3] == a_r[3, 1]
     @test size(a) == reverse(size(a_r)) == (2, 3)
+    @test size(a_r, 2) == 2
 
     @test RowMajorArray{Float64}(a) == RowMajorArray(convert.(Float64, a))
 
@@ -14,6 +15,8 @@ using Test
     @test getindex(a_r, 3, 2) == 42
     setindex!(a_r, 43, 2,1)
     @test getindex(a_r, 2, 1) == 43
+
+    @test a_r[4] == a[4] # linear indices are the same for standard and RowMajorArrays
 
     z = RowMajorArrays.zeros(Int, 5, 3)
     @test size(z) == (5, 3)
