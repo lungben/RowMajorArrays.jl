@@ -61,9 +61,6 @@ for m in forward_methods
     @eval Base.$m(a:: RowMajorArray) = Base.$m(a.data)
 end
 
-# Base.iterate(a:: RowMajorArray) = Base.iterate(a.data)
-# Base.iterate(a:: RowMajorArray, i) = Base.iterate(a.data, i)
-
 # constructor methods
 # separate from `Base.zeros`, etc. - execute with qualified module name, e.g. `RowMajorArrays.zeros`, etc.
 forward_methods = (:zeros, :ones, :rand, :randn)
