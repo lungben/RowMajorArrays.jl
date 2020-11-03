@@ -28,6 +28,21 @@ It is a wrapper over a column-major array which reverses the dimensions for outs
     combined_r.data # gives underlying column major array (with reversed dimensions)
     transpose(combined_r.data) == combined_r # transpose is only defined in 2 dimensions
 
+## Performance
+
+As expected, RowMajorArrays are faster when iterating over the row-by-row.
+
+Output of `test/performance.jl`:
+
+    Array row major sum
+    1.636 ms (0 allocations: 0 bytes)
+    Array column major sum
+    973.700 μs (0 allocations: 0 bytes)
+    RowMajorArray row major sum
+    971.900 μs (0 allocations: 0 bytes)
+    RowMajorArray column major sum
+    1.618 ms (0 allocations: 0 bytes)
+
 ## Disclaimer
 
 This package is still experimental and has primarily been written for my own education.
