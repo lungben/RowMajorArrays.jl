@@ -25,8 +25,11 @@ Base.size(a:: RowMajorArray, dim:: Int) = reverse(size(a.data))[dim]
 
 Base.similar(a:: RowMajorArray{T, N, A}) where {T, N, A} = similar(a, T, size(a))
 Base.similar(a:: RowMajorArray{T, N, A}, dims:: Dims) where {T, N, A} =  RowMajorArray{T, N, A}(A(undef, reverse(dims)...))
-Base.similar(a:: RowMajorArray{T, N, A}, ::Type{T}, dims:: Dims) where {T, N, A} = RowMajorArray{T, N, A}(A(undef, reverse(dims)...)) # ToDo: this function needs to create a `RowMajorArray` with given element type
 
+function Base.similar(a:: RowMajorArray{X, N, A}, ::Type{T}, dims:: Dims) where {X, T, N, A}
+    data = similar(a.data, T, reverse(dims))
+    RowMajorArray(data)
+end
 
 # defining broadcasting
 Base.BroadcastStyle(::Type{<: RowMajorArray}) = Broadcast.ArrayStyle{RowMajorArray}()
@@ -43,7 +46,6 @@ end
 find_row_major_array(bc::Base.Broadcast.Broadcasted) = find_row_major_array(bc.args)
 find_row_major_array(args::Tuple) = find_row_major_array(find_row_major_array(args[1]), Base.tail(args))
 find_row_major_array(a::RowMajorArray) = a
-find_row_major_array(::Any) = nothing
 find_row_major_array(::Tuple{}) = nothing
 find_row_major_array(a::RowMajorArray, rest) = a
 find_row_major_array(::Any, rest) = find_row_major_array(rest)

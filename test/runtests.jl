@@ -84,13 +84,13 @@ using Test
     @test typeof(similar_3) == typeof(a_r) == RowMajorArray{Int64,2,Array{Int64,2}}
     similar_4 = similar(a_r, Float64, (10,4)) # other eltype than original array
     @test size(similar_4) == (10,4)
-    @test_broken typeof(similar_4) == RowMajorArray{Float64,2,Array{Float64,2}}
+    @test typeof(similar_4) == RowMajorArray{Float64,2,Array{Float64,2}}
 
     # broadcasting
     @test typeof(one_r .* a_r) == RowMajorArray{Float64,2,Array{Float64,2}}
     @test typeof(one_r .+ a_r) == RowMajorArray{Float64,2,Array{Float64,2}}
-    @test_broken typeof(a_r .* one_r) == RowMajorArray{Float64,2,Array{Float64,2}}
-    @test_broken typeof(a_r .+ one_r) == RowMajorArray{Float64,2,Array{Float64,2}}
+    @test typeof(a_r .* one_r) == RowMajorArray{Float64,2,Array{Float64,2}}
+    @test typeof(a_r .+ one_r) == RowMajorArray{Float64,2,Array{Float64,2}}
 
     # check that standard array broadcasting is not broken
     @test typeof(a .+ ones(2, 3)) == Array{Float64,2}
